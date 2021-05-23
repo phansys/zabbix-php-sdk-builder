@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot access property \\$error on array\\|object\\.$#"
+			count: 1
+			path: build/AbstractZabbixApi.php
+
+		-
+			message: "#^Cannot access property \\$result on array\\|object\\.$#"
+			count: 3
+			path: build/AbstractZabbixApi.php
+
