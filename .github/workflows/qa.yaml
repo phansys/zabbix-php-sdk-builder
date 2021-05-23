@@ -29,5 +29,8 @@ jobs:
                   dependency-versions: "highest"
                   composer-options: "--prefer-dist --prefer-stable"
 
+            - name: Build
+              run: src/build.php
+
             - name: PHPStan
               run: vendor/bin/phpstan --memory-limit=1G analyse
