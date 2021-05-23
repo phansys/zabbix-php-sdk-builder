@@ -1,0 +1,55 @@
+{
+    "name": "confirm-it-solutions/zabbix-php-sdk-builder",
+    "type": "project",
+    "description": "Builder for the PHP Zabbix SDK",
+    "keywords": [
+        "zabbix",
+        "api"
+    ],
+    "homepage": "https://github.com/confirm/PhpZabbixApi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dominique Barton",
+            "email": "phpzabbixapi@confirm.ch",
+            "homepage": "http://www.confirm.ch",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "ext-pcre": "*",
+        "ext-reflection": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.19",
+        "guzzlehttp/guzzle": "^7.3",
+        "phpstan/phpstan": "^0.12.88",
+        "phpunit/phpunit": "^9.5"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Confirm\\ZabbixSdkBuilder\\": [
+                "src/"
+            ]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Confirm\\ZabbixApi\\": [
+                "build/"
+            ],
+            "Confirm\\ZabbixApi\\Tests\\": [
+                "tests/"
+            ]
+        }
+    }
+}
