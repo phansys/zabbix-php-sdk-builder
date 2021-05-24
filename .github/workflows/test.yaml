@@ -61,7 +61,9 @@ jobs:
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - name: "Install Composer dependencies"
-              run: composer install --prefer-dist --prefer-stable
+              uses: "ramsey/composer-install@v1"
+              with:
+                  composer-options: "--prefer-dist"
 
             - name: Run Tests
               run: vendor/bin/phpunit
