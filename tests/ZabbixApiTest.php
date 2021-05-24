@@ -44,9 +44,9 @@ final class ZabbixApiTest extends TestCase
 
         $zabbix = new ZabbixApi('http://localhost/json_rpc.php', 'zabbix', 'very_secret');
 
-        $defaultParams = array(
-            'some_param' => array('one'),
-        );
+        $defaultParams = [
+            'some_param' => ['one'],
+        ];
         $zabbix->setDefaultParams($defaultParams);
         $this->assertSame('http://localhost/json_rpc.php', $zabbix->getApiUrl());
         $this->assertSame($defaultParams, $zabbix->getDefaultParams());
@@ -67,14 +67,14 @@ final class ZabbixApiTest extends TestCase
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
-            ->setMethods(array('request', 'userGet'))
+            ->setMethods(['request', 'userGet'])
             ->getMock();
 
         // `userGet()` must not be called if the argument 3 (`$tokenCacheDir`) is passed with value `null`.
         $zabbix
             ->expects($this->never())
             ->method('userGet')
-            ->with(array('countOutput' => true));
+            ->with(['countOutput' => true]);
 
         // `request()` must be called in order to retrieve the token.
         $zabbix
@@ -83,20 +83,20 @@ final class ZabbixApiTest extends TestCase
             ->with('user.login')
             ->willReturn($authToken);
 
-        $this->assertSame($authToken, $zabbix->userLogin(array('user' => $user, 'password' => $pass), '', null));
+        $this->assertSame($authToken, $zabbix->userLogin(['user' => $user, 'password' => $pass], '', null));
 
         $zabbix = $this->getMockBuilder(ZabbixApi::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
-            ->setMethods(array('request', 'userGet'))
+            ->setMethods(['request', 'userGet'])
             ->getMock();
 
         // `userGet()` must not be called since the token cache file is not created yet.
         $zabbix
             ->expects($this->never())
             ->method('userGet')
-            ->with(array('countOutput' => true));
+            ->with(['countOutput' => true]);
 
         // `request()` must be called in order to retrieve the token.
         $zabbix
@@ -105,20 +105,20 @@ final class ZabbixApiTest extends TestCase
             ->with('user.login')
             ->willReturn($authToken);
 
-        $this->assertSame($authToken, $zabbix->userLogin(array('user' => $user, 'password' => $pass), '', $cacheDir));
+        $this->assertSame($authToken, $zabbix->userLogin(['user' => $user, 'password' => $pass], '', $cacheDir));
 
         $zabbix = $this->getMockBuilder(ZabbixApi::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
-            ->setMethods(array('request', 'userGet'))
+            ->setMethods(['request', 'userGet'])
             ->getMock();
 
         // `userGet()` must be called since the token at token cache file must be validated.
         $zabbix
             ->expects($this->once())
             ->method('userGet')
-            ->with(array('countOutput' => true));
+            ->with(['countOutput' => true]);
 
         // `request()` must not be called since the token was already retrieved from the token cache file.
         $zabbix
@@ -126,7 +126,7 @@ final class ZabbixApiTest extends TestCase
             ->method('request')
             ->with('user.login');
 
-        $this->assertSame($authToken, $zabbix->userLogin(array('user' => $user, 'password' => $pass), '', $cacheDir));
+        $this->assertSame($authToken, $zabbix->userLogin(['user' => $user, 'password' => $pass], '', $cacheDir));
 
         $this->removeTokenCacheDir($cacheDir);
     }
@@ -136,30 +136,30 @@ final class ZabbixApiTest extends TestCase
      */
     public function testAuthenticationRequired(string $method, string $apiMethod, bool $isAuthenticationRequired): void
     {
-        $this->assertTrue(is_callable(array(ZabbixApi::class, $method)));
+        $this->assertTrue(is_callable([ZabbixApi::class, $method]));
 
         $zabbix = $this->getMockBuilder(ZabbixApi::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
-            ->setMethods(array('request'))
+            ->setMethods(['request'])
             ->getMock();
 
         $zabbix
             ->expects($this->once())
             ->method('request')
-            ->with($apiMethod, array(), '', $isAuthenticationRequired);
+            ->with($apiMethod, [], '', $isAuthenticationRequired);
 
         $zabbix->$method();
     }
 
     public function getAuthenticationRequired(): iterable
     {
-        return array(
-            array('method' => 'userGet', 'api_method' => 'user.get', 'is_authentication_required' => true),
-            array('method' => 'apiinfoVersion', 'api_method' => 'apiinfo.version', 'is_authentication_required' => false),
-            array('method' => 'hostGet', 'api_method' => 'host.get', 'is_authentication_required' => true),
-        );
+        return [
+            ['method' => 'userGet', 'api_method' => 'user.get', 'is_authentication_required' => true],
+            ['method' => 'apiinfoVersion', 'api_method' => 'apiinfo.version', 'is_authentication_required' => false],
+            ['method' => 'hostGet', 'api_method' => 'host.get', 'is_authentication_required' => true],
+        ];
     }
 
     public function testZabbixApiConnectionError(): void
