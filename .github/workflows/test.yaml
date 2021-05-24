@@ -65,5 +65,8 @@ jobs:
               with:
                   composer-options: "--prefer-dist"
 
+            - name: Build
+              run: src/build.php
+
             - name: Run Tests
               run: vendor/bin/phpunit
