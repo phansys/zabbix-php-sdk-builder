@@ -232,6 +232,7 @@ foreach ($constantsArray['constant_names'] as $k => $name) {
 $apiMethods = '';
 
 $blacklistedMethods = array(
+    'checkCircleSelementsLink',
     'checkInput',
     'deleteMediaReal',
     'isReadable',

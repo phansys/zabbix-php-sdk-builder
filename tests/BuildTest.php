@@ -228,7 +228,6 @@ final class BuildTest extends TestCase
         yield ['mapCreate'];
         yield ['mapUpdate'];
         yield ['mapDelete'];
-        yield ['mapCheckCircleSelementsLink'];
         yield ['mapTableName'];
         yield ['mapPk'];
         yield ['mapPkOption'];
