@@ -40,7 +40,6 @@ final class BuildTest extends TestCase
         $zabbix = new ZabbixApi('https://localhost/json_rpc.php', 'zabbix', 'very_secret');
         $ro = new \ReflectionObject($zabbix);
 
-        $this->assertGreaterThanOrEqual(360, count($ro->getMethods(\ReflectionMethod::IS_PUBLIC)));
         $this->assertGreaterThanOrEqual(668, count($ro->getConstants()));
     }
 
