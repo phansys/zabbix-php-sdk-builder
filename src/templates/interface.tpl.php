@@ -30,7 +30,9 @@ namespace ZabbixApi;
 use Psr\Http\Message\ResponseInterface;
 
 interface <CLASSNAME_INTERFACE>
-{
+{<!START_API_CONSTANT>
+    const <PHP_CONST_NAME> = <PHP_CONST_VALUE>;
+<!END_API_CONSTANT>
     /**
      * Returns the API url for all requests.
      *
@@ -188,5 +190,4 @@ interface <CLASSNAME_INTERFACE>
      * @return mixed
      */
     public function <PHP_METHOD>($params = array(), $arrayKeyProperty = null);
-<!END_API_METHOD>
-}
+<!END_API_METHOD>}

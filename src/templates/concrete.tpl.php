@@ -35,9 +35,7 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
-{<!START_API_CONSTANT>
-    const <PHP_CONST_NAME> = <PHP_CONST_VALUE>;
-<!END_API_CONSTANT>
+{
     /**
      * Boolean if requests/responses should be printed out (JSON).
      *
@@ -84,20 +82,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     private $id;
 
     /**
-     * Request array.
-     *
-     * @var array
-     */
-    private $request = array();
-
-    /**
-     * JSON encoded request string.
-     *
-     * @var string
-     */
-    private $requestEncoded = '';
-
-    /**
      * @var array
      */
     private $requestPayload = array();
@@ -118,13 +102,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @var ClientInterface
      */
     private $client;
-
-    /**
-     * Extra HTTP headers.
-     *
-     * @var string
-     */
-    private $extraHeaders = '';
 
     /**
      * @var array<string, mixed>
@@ -182,7 +159,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @param string $apiUrl API url
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setApiUrl($apiUrl)
     {
@@ -196,7 +173,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @param string $authToken API auth ID
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setAuthToken($authToken)
     {
@@ -211,7 +188,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string $user HTTP basic authorization username
      * @param string $password HTTP basic authorization password
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setBasicAuthorization($user, $password)
     {
@@ -227,7 +204,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @param array $context Array with the SSL context
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setSslContext(array $context)
     {
@@ -253,7 +230,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @throws Exception
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setDefaultParams(array $defaultParams)
     {
@@ -267,7 +244,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @param bool $print Boolean if requests/responses should be printed out
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function printCommunication($print = true)
     {
@@ -304,7 +281,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         $this->id = number_format(microtime(true), 4, '', '');
 
         // Build request payload.
-        $this->payload = array(
+        $this->requestPayload = array(
             'jsonrpc' => '2.0',
             'method' => $method,
             'params' => $params,
