@@ -28,7 +28,7 @@
 
 use ZabbixSdkBuilder\Builder;
 
-if (!in_array(\PHP_SAPI, array('cli', 'phpdbg', 'embed'), true)) {
+if (!in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     throw new \RuntimeException('Error: '.__FILE__.' must be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL);
 }
 
@@ -41,23 +41,23 @@ require dirname(__DIR__).'/vendor/autoload.php';
 $builder = new Builder();
 
 // Define template placeholders.
-$templatePlaceholders = array(
+$templatePlaceholders = [
     'CLASSNAME_ABSTRACT' => Builder::CLASSNAME_ABSTRACT,
     'CLASSNAME_CONCRETE' => Builder::CLASSNAME_CONCRETE,
     'CLASSNAME_EXCEPTION' => Builder::CLASSNAME_EXCEPTION,
     'FILENAME_ABSTRACT' => Builder::FILENAME_ABSTRACT,
     'FILENAME_CONCRETE' => Builder::FILENAME_CONCRETE,
     'FILENAME_EXCEPTION' => Builder::FILENAME_EXCEPTION,
-);
+];
 
 // Just loop through all available API classes and find all defined methods in these
 // classes in order to initialze the API array.
-$apiArray = array();
+$apiArray = [];
 
 // Loop through class map.
 foreach ($builder->getApiClassMap() as $resource => $class) {
     // Add resource to API array.
-    $apiArray[$resource] = array();
+    $apiArray[$resource] = [];
 
     // Create new reflection class.
     $reflection = new \ReflectionClass($class);
@@ -90,7 +90,7 @@ preg_match_all('{^define\(\'(?<constant_names>[^\']+)\',\s*(?!\);)(?<constant_va
 // Initialize variable for API constants.
 $apiConstants = '';
 
-$blacklistedConstants = array('HTTPS', 'ZBX_FONTPATH');
+$blacklistedConstants = ['HTTPS', 'ZBX_FONTPATH'];
 
 // Build API constants.
 foreach ($constantsArray['constant_names'] as $k => $name) {
@@ -114,29 +114,29 @@ foreach ($constantsArray['constant_names'] as $k => $name) {
         }
     }
 
-    $constantPlaceholders = array(
+    $constantPlaceholders = [
         'PHP_CONST_NAME' => $name,
         'PHP_CONST_VALUE' => $value,
-    );
+    ];
     $apiConstants .= $builder->replacePlaceholders($matches[2], $constantPlaceholders);
 }
 
 // Initialize variable for API methods.
 $apiMethods = '';
 
-$blacklistedMethods = array(
+$blacklistedMethods = [
     'checkCircleSelementsLink',
     'checkInput',
     'deleteMediaReal',
     'isReadable',
     'isWritable',
-);
+];
 
-$anonymousFunctions = array(
+$anonymousFunctions = [
     'apiinfo.version',
     'user.checkauthentication',
     'user.login',
-);
+];
 
 // Build API methods.
 foreach ($apiArray as $resource => $actions) {
@@ -145,11 +145,11 @@ foreach ($apiArray as $resource => $actions) {
             continue;
         }
         $apiMethod = $resource.'.'.strtolower($action);
-        $methodPlaceholders = array(
+        $methodPlaceholders = [
             'API_METHOD' => $apiMethod,
             'PHP_METHOD' => $resource.ucfirst($action),
             'IS_AUTHENTICATION_REQUIRED' => in_array($apiMethod, $anonymousFunctions, true) ? 'false' : 'true',
-        );
+        ];
         $apiMethods .= $builder->replacePlaceholders($matches[4], $methodPlaceholders);
     }
 }

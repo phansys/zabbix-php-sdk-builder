@@ -131,6 +131,8 @@ class Builder
      *
      *  >= 2.4: The class map is stored as an instance property in the
      *          origin CApiServiceFactory class.
+     *
+     * @return array<string, class-string>
      */
     public function getApiClassMap(): array
     {
