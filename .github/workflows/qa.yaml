@@ -39,7 +39,7 @@ jobs:
                 ln -s /opt/zabbix/zabbix-$ZABBIX_VERSION/frontends/php/ /opt/zabbix/frontend
 
             - name: Build
-              run: src/build.php
+              run: bin/build
 
             - name: PHPStan
               run: vendor/bin/phpstan --memory-limit=1G analyse

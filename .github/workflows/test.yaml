@@ -69,7 +69,7 @@ jobs:
                   composer-options: "--prefer-dist"
 
             - name: Build
-              run: src/build.php
+              run: bin/build
 
             - name: Run Tests
               run: vendor/bin/phpunit

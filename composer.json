@@ -34,6 +34,13 @@
             "dev-master": "1.0-dev"
         }
     },
+    "autoload": {
+        "psr-4": {
+            "ZabbixSdkBuilder\\": [
+                "src/"
+            ]
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "ZabbixApi\\": [
