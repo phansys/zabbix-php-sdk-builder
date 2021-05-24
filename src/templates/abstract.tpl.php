@@ -410,16 +410,21 @@ abstract class <CLASSNAME_ABSTRACT>
      *
      * @param array $params Parameters to pass through
      * @param string $arrayKeyProperty Object property for key of array
-     * @param string $tokenCacheDir Path to a directory to store the auth token
+     * @param string|null $tokenCacheDir Path to a directory to store the auth token
      *
      * @throws Exception
      *
      * @return string
      */
-    final public function userLogin($params = array(), $arrayKeyProperty = '', $tokenCacheDir = '/tmp')
+    final public function userLogin($params = array(), $arrayKeyProperty = '', $tokenCacheDir = null)
     {
         // reset auth token
         $this->authToken = null;
+        $tokenCacheFile = null;
+
+        if (null === $tokenCacheDir) {
+            $tokenCacheDir = sys_get_temp_dir();
+        }
 
         // build filename for cached auth token
         if ($tokenCacheDir && array_key_exists('user', $params) && is_dir($tokenCacheDir)) {
@@ -428,7 +433,7 @@ abstract class <CLASSNAME_ABSTRACT>
         }
 
         // try to read cached auth token
-        if (isset($tokenCacheFile) && is_file($tokenCacheFile)) {
+        if (null !== $tokenCacheFile && is_file($tokenCacheFile)) {
             try {
                 // get auth token and try to execute a user.get (dummy check)
                 $this->authToken = file_get_contents($tokenCacheFile);
@@ -441,13 +446,13 @@ abstract class <CLASSNAME_ABSTRACT>
         }
 
         // no cached token found so far, so login (again)
-        if (!$this->authToken) {
+        if (null === $this->authToken) {
             // login to get the auth token
             $params = $this->getRequestParamsArray($params);
             $this->authToken = $this->request('user.login', $params, $arrayKeyProperty, false);
 
             // save cached auth token
-            if (isset($tokenCacheFile)) {
+            if (null !== $tokenCacheFile) {
                 file_put_contents($tokenCacheFile, $this->authToken);
                 chmod($tokenCacheFile, 0600);
             }
