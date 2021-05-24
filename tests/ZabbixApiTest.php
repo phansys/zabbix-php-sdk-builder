@@ -28,8 +28,10 @@
 namespace ZabbixApi\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use ZabbixApi\Exception;
 use ZabbixApi\ZabbixApi;
+use ZabbixApi\ZabbixApiInterface;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
@@ -44,14 +46,15 @@ final class ZabbixApiTest extends TestCase
 
         $zabbix = new ZabbixApi('http://localhost/json_rpc.php', 'zabbix', 'very_secret');
 
+        $this->assertInstanceOf(ZabbixApiInterface::class, $zabbix);
+
         $defaultParams = [
             'some_param' => ['one'],
         ];
         $zabbix->setDefaultParams($defaultParams);
         $this->assertSame('http://localhost/json_rpc.php', $zabbix->getApiUrl());
         $this->assertSame($defaultParams, $zabbix->getDefaultParams());
-        $this->assertSame('', $zabbix->getRequest());
-        $this->assertSame('', $zabbix->getResponse());
+        $this->assertInstanceOf(ResponseInterface::class, $zabbix->getResponse());
     }
 
     public function testUserLoginOnConsecutiveCalls(): void
@@ -63,7 +66,7 @@ final class ZabbixApiTest extends TestCase
 
         $this->createTokenCacheDir($cacheDir);
 
-        $zabbix = $this->getMockBuilder(ZabbixApi::class)
+        $zabbix = $this->getMockBuilder(ZabbixApiInterface::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
@@ -85,7 +88,7 @@ final class ZabbixApiTest extends TestCase
 
         $this->assertSame($authToken, $zabbix->userLogin(['user' => $user, 'password' => $pass], '', null));
 
-        $zabbix = $this->getMockBuilder(ZabbixApi::class)
+        $zabbix = $this->getMockBuilder(ZabbixApiInterface::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
@@ -107,7 +110,7 @@ final class ZabbixApiTest extends TestCase
 
         $this->assertSame($authToken, $zabbix->userLogin(['user' => $user, 'password' => $pass], '', $cacheDir));
 
-        $zabbix = $this->getMockBuilder(ZabbixApi::class)
+        $zabbix = $this->getMockBuilder(ZabbixApiInterface::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
@@ -138,7 +141,7 @@ final class ZabbixApiTest extends TestCase
     {
         $this->assertTrue(is_callable([ZabbixApi::class, $method]));
 
-        $zabbix = $this->getMockBuilder(ZabbixApi::class)
+        $zabbix = $this->getMockBuilder(ZabbixApiInterface::class)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
