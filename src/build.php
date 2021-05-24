@@ -220,6 +220,7 @@ foreach ($constantsArray['constant_names'] as $k => $name) {
             }
         }
     }
+
     $constantPlaceholders = array(
         'PHP_CONST_NAME' => $name,
         'PHP_CONST_VALUE' => $value,
@@ -237,7 +238,7 @@ $anonymousFunctions = array(
 // build API methods
 foreach ($apiArray as $resource => $actions) {
     foreach ($actions as $action) {
-        $apiMethod = $resource.'.'.$action;
+        $apiMethod = $resource.'.'.strtolower($action);
         $methodPlaceholders = array(
             'API_METHOD' => $apiMethod,
             'PHP_METHOD' => $resource.ucfirst($action),
