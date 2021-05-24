@@ -231,7 +231,12 @@ foreach ($constantsArray['constant_names'] as $k => $name) {
 // initialize variable for API methods
 $apiMethods = '';
 
-$blacklistedMethods = array('checkInput', 'isReadable', 'isWritable');
+$blacklistedMethods = array(
+    'checkInput',
+    'deleteMediaReal',
+    'isReadable',
+    'isWritable',
+);
 
 $anonymousFunctions = array(
     'apiinfo.version',

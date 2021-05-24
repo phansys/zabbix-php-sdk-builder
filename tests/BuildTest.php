@@ -339,7 +339,6 @@ final class BuildTest extends TestCase
         yield ['userAddMedia'];
         yield ['userUpdateMedia'];
         yield ['userDeleteMedia'];
-        yield ['userDeleteMediaReal'];
         yield ['userCheckAuthentication'];
         yield ['userTableName'];
         yield ['userPk'];
