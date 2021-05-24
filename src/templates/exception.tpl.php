@@ -27,9 +27,6 @@
 
 namespace ZabbixApi;
 
-/**
- * Exception class for ZabbixApi namespace.
- */
 class Exception extends \Exception
 {
 }

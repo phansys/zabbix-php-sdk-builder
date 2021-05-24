@@ -37,15 +37,22 @@ set_time_limit(0);
 // Enable autoload.
 require dirname(__DIR__).'/vendor/autoload.php';
 
+// Create directory for built files.
+if (!is_dir(Builder::PATH_BUILD)) {
+    @mkdir(Builder::PATH_BUILD);
+}
+
+$zabbixPath = $argv[1] ?? null;
+
 // Initialize.
-$builder = new Builder();
+$builder = new Builder($zabbixPath);
 
 // Define template placeholders.
 $templatePlaceholders = [
-    'CLASSNAME_ABSTRACT' => Builder::CLASSNAME_ABSTRACT,
+    'CLASSNAME_INTERFACE' => Builder::CLASSNAME_INTERFACE,
     'CLASSNAME_CONCRETE' => Builder::CLASSNAME_CONCRETE,
     'CLASSNAME_EXCEPTION' => Builder::CLASSNAME_EXCEPTION,
-    'FILENAME_ABSTRACT' => Builder::FILENAME_ABSTRACT,
+    'FILENAME_INTERFACE' => Builder::FILENAME_INTERFACE,
     'FILENAME_CONCRETE' => Builder::FILENAME_CONCRETE,
     'FILENAME_EXCEPTION' => Builder::FILENAME_EXCEPTION,
 ];
@@ -71,17 +78,17 @@ foreach ($builder->getApiClassMap() as $resource => $class) {
     }
 }
 
-// Build abstract template.
-if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/abstract.tpl.php')) {
+// Build concrete template.
+if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/concrete.tpl.php')) {
     throw new \RuntimeException('Error.');
 }
 
-// Fetch API method block.
+// Fetch API constant and method blocks.
 preg_match('/(.*)<!START_API_CONSTANT>(.*)<!END_API_CONSTANT>(.*)<!START_API_METHOD>(.*)<!END_API_METHOD>(.*)/s', $template, $matches);
 
 // Sanity check.
 if (6 !== count($matches)) {
-    throw new \RuntimeException('Template "'.Builder::PATH_TEMPLATES.'/abstract.tpl.php" parsing failed!');
+    throw new \RuntimeException('Template "'.Builder::PATH_TEMPLATES.'/concrete.tpl.php" parsing failed!');
 }
 
 $defines = file_get_contents($builder->getZabbixPath().'/include/defines.inc.php');
@@ -144,6 +151,7 @@ foreach ($apiArray as $resource => $actions) {
         if (in_array($action, $blacklistedMethods, true)) {
             continue;
         }
+
         $apiMethod = $resource.'.'.strtolower($action);
         $methodPlaceholders = [
             'API_METHOD' => $apiMethod,
@@ -154,56 +162,67 @@ foreach ($apiArray as $resource => $actions) {
     }
 }
 
-// Build file content.
+// Build concrete file content.
 $fileContent = $builder->replacePlaceholders($matches[1].$apiConstants.$matches[3].$apiMethods.$matches[5], $templatePlaceholders);
 
-if (!is_dir(Builder::PATH_BUILD)) {
-    @mkdir(Builder::PATH_BUILD);
-}
-
-// Write abstract class.
-if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_ABSTRACT, $fileContent)) {
+// Write concrete class.
+if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE, $fileContent)) {
     throw new \RuntimeException('Error.');
 }
 
-echo 'BUILT: abstract class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_ABSTRACT.'"'."\n";
+echo 'BUILT: concrete class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE.'"'."\n";
 
-// Build concrete template.
-if (!file_exists(Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE)) {
-    // get template
-    if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/concrete.tpl.php')) {
-        throw new \RuntimeException('Error.');
-    }
-
-    // Build file content.
-    $fileContent = $builder->replacePlaceholders($template, $templatePlaceholders);
-
-    // Write abstract class.
-    if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE, $fileContent)) {
-        throw new \RuntimeException('Error.');
-    }
-
-    echo 'BUILT: conrete class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE.'"'."\n";
-} else {
-    echo 'SKIPPED: concrete class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_CONCRETE.'"'."\n";
+// Build interface file content.
+if (!$templateInterface = file_get_contents(Builder::PATH_TEMPLATES.'/interface.tpl.php')) {
+    throw new \RuntimeException('Error.');
 }
+
+// Fetch API method block.
+preg_match('/(.*)<!START_API_METHOD>(.*)<!END_API_METHOD>(.*)/s', $templateInterface, $matches);
+
+// Sanity check.
+if (4 !== count($matches)) {
+    throw new \RuntimeException('Template "'.Builder::PATH_TEMPLATES.'/interface.tpl.php" parsing failed!');
+}
+
+// Build API methods.
+
+$apiMethodsInterface = '';
+
+foreach ($apiArray as $resource => $actions) {
+    foreach ($actions as $action) {
+        if (in_array($action, $blacklistedMethods, true)) {
+            continue;
+        }
+
+        $methodPlaceholders = [
+            'API_METHOD' => $resource.'.'.strtolower($action),
+            'PHP_METHOD' => $resource.ucfirst($action),
+        ];
+        $apiMethodsInterface .= $builder->replacePlaceholders($matches[2], $methodPlaceholders);
+    }
+}
+
+$fileContentInterface = $builder->replacePlaceholders($matches[1].$apiMethodsInterface.$matches[3], $templatePlaceholders);
+
+// Write interface.
+if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_INTERFACE, $fileContentInterface)) {
+    throw new \RuntimeException('Error.');
+}
+
+echo 'BUILT: interface file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_INTERFACE.'"'."\n";
 
 // Build exception template.
-if (!file_exists(Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION)) {
-    // Get template.
-    if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/exception.tpl.php')) {
-        throw new \RuntimeException('Error.');
-    }
-
-    // Build file content.
-    $fileContent = $builder->replacePlaceholders($template, $templatePlaceholders);
-
-    // write abstract class
-    if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION, $fileContent)) {
-        throw new \RuntimeException('Error.');
-    }
-
-    echo 'BUILT: conrete class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION.'"'."\n";
-} else {
-    echo 'SKIPPED: concrete class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION.'"'."\n";
+if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/exception.tpl.php')) {
+    throw new \RuntimeException('Error.');
 }
+
+// Build file content.
+$fileContent = $builder->replacePlaceholders($template, $templatePlaceholders);
+
+// write abstract class
+if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION, $fileContent)) {
+    throw new \RuntimeException('Error.');
+}
+
+echo 'BUILT: exception class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION.'"'."\n";

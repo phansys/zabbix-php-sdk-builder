@@ -35,12 +35,12 @@ class Builder
     /**
      * Class name for the abstract API class.
      */
-    public const CLASSNAME_ABSTRACT = 'AbstractZabbixApi';
+    public const CLASSNAME_INTERFACE = 'ZabbixApiInterface';
 
     /**
-     * Filename for the abstract API class.
+     * Filename for the Zabbix API interface.
      */
-    public const FILENAME_ABSTRACT = self::CLASSNAME_ABSTRACT.'.php';
+    public const FILENAME_INTERFACE = self::CLASSNAME_INTERFACE.'.php';
 
     /**
      * Class name for the concrete API class.
