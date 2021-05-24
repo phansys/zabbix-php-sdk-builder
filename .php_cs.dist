@@ -25,7 +25,6 @@ THE SOFTWARE.
 @author confirm IT solutions GmbH, Rathausstrase 14, CH-6340 Baar
 EOF;
 
-// Use PHP-CS-Fixer 2+ if it is available
 return PhpCsFixer\Config::create()
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
