@@ -75,7 +75,6 @@ final class BuildTest extends TestCase
         yield ['apiinfoPk'];
         yield ['apiinfoPkOption'];
         yield ['applicationGet'];
-        yield ['applicationCheckInput'];
         yield ['applicationCreate'];
         yield ['applicationUpdate'];
         yield ['applicationDelete'];
@@ -111,7 +110,6 @@ final class BuildTest extends TestCase
         yield ['discoveryrulePk'];
         yield ['discoveryrulePkOption'];
         yield ['druleGet'];
-        yield ['druleCheckInput'];
         yield ['druleCreate'];
         yield ['druleUpdate'];
         yield ['druleDelete'];
@@ -188,7 +186,6 @@ final class BuildTest extends TestCase
         yield ['historyPk'];
         yield ['historyPkOption'];
         yield ['hostinterfaceGet'];
-        yield ['hostinterfaceCheckInput'];
         yield ['hostinterfaceCreate'];
         yield ['hostinterfaceUpdate'];
         yield ['hostinterfaceDelete'];
@@ -344,7 +341,6 @@ final class BuildTest extends TestCase
         yield ['trendPk'];
         yield ['trendPkOption'];
         yield ['triggerGet'];
-        yield ['triggerCheckInput'];
         yield ['triggerCreate'];
         yield ['triggerUpdate'];
         yield ['triggerDelete'];
