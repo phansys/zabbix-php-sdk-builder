@@ -361,7 +361,6 @@ final class BuildTest extends TestCase
         yield ['triggerprototypeCreate'];
         yield ['triggerprototypeUpdate'];
         yield ['triggerprototypeDelete'];
-        yield ['triggerprototypeAddDependencies'];
         yield ['triggerprototypeSyncTemplateDependencies'];
         yield ['triggerprototypeSyncTemplates'];
         yield ['triggerprototypeTableName'];
