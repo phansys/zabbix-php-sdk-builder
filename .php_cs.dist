@@ -50,6 +50,7 @@ return PhpCsFixer\Config::create()
         'logical_operators' => true,
         'method_argument_space' => true,
         'multiline_whitespace_before_semicolons' => true,
+        'native_constant_invocation' => false,
         'native_function_invocation' => false,
         'no_alternative_syntax' => true,
         'no_empty_comment' => true,
@@ -97,6 +98,7 @@ return PhpCsFixer\Config::create()
         'psr4' => true,
         'return_assignment' => true,
         'single_line_comment_style' => true,
+        'single_quote' => false,
         'void_return' => false,
         'yoda_style' => true,
     ))
