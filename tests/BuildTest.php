@@ -88,8 +88,6 @@ final class BuildTest extends TestCase
         yield ['configurationPk'];
         yield ['configurationPkOption'];
         yield ['dcheckGet'];
-        yield ['dcheckIsReadable'];
-        yield ['dcheckIsWritable'];
         yield ['dcheckTableName'];
         yield ['dcheckPk'];
         yield ['dcheckPkOption'];
@@ -103,8 +101,6 @@ final class BuildTest extends TestCase
         yield ['discoveryruleDelete'];
         yield ['discoveryruleCopy'];
         yield ['discoveryruleSyncTemplates'];
-        yield ['discoveryruleIsReadable'];
-        yield ['discoveryruleIsWritable'];
         yield ['discoveryruleFindInterfaceForItem'];
         yield ['discoveryruleTableName'];
         yield ['discoveryrulePk'];
@@ -113,8 +109,6 @@ final class BuildTest extends TestCase
         yield ['druleCreate'];
         yield ['druleUpdate'];
         yield ['druleDelete'];
-        yield ['druleIsReadable'];
-        yield ['druleIsWritable'];
         yield ['druleTableName'];
         yield ['drulePk'];
         yield ['drulePkOption'];
@@ -154,8 +148,6 @@ final class BuildTest extends TestCase
         yield ['hostMassUpdate'];
         yield ['hostMassRemove'];
         yield ['hostDelete'];
-        yield ['hostIsReadable'];
-        yield ['hostIsWritable'];
         yield ['hostTableName'];
         yield ['hostPk'];
         yield ['hostPkOption'];
@@ -166,8 +158,6 @@ final class BuildTest extends TestCase
         yield ['hostgroupMassAdd'];
         yield ['hostgroupMassRemove'];
         yield ['hostgroupMassUpdate'];
-        yield ['hostgroupIsReadable'];
-        yield ['hostgroupIsWritable'];
         yield ['hostgroupTableName'];
         yield ['hostgroupPk'];
         yield ['hostgroupPkOption'];
@@ -176,8 +166,6 @@ final class BuildTest extends TestCase
         yield ['hostprototypeUpdate'];
         yield ['hostprototypeSyncTemplates'];
         yield ['hostprototypeDelete'];
-        yield ['hostprototypeIsReadable'];
-        yield ['hostprototypeIsWritable'];
         yield ['hostprototypeTableName'];
         yield ['hostprototypePk'];
         yield ['hostprototypePkOption'];
@@ -206,8 +194,6 @@ final class BuildTest extends TestCase
         yield ['iconmapCreate'];
         yield ['iconmapUpdate'];
         yield ['iconmapDelete'];
-        yield ['iconmapIsReadable'];
-        yield ['iconmapIsWritable'];
         yield ['iconmapTableName'];
         yield ['iconmapPk'];
         yield ['iconmapPkOption'];
@@ -219,8 +205,6 @@ final class BuildTest extends TestCase
         yield ['itemValidateInventoryLinks'];
         yield ['itemAddRelatedObjects'];
         yield ['itemFindInterfaceForItem'];
-        yield ['itemIsReadable'];
-        yield ['itemIsWritable'];
         yield ['itemTableName'];
         yield ['itemPk'];
         yield ['itemPkOption'];
@@ -231,8 +215,6 @@ final class BuildTest extends TestCase
         yield ['itemprototypeSyncTemplates'];
         yield ['itemprototypeAddRelatedObjects'];
         yield ['itemprototypeFindInterfaceForItem'];
-        yield ['itemprototypeIsReadable'];
-        yield ['itemprototypeIsWritable'];
         yield ['itemprototypeTableName'];
         yield ['itemprototypePk'];
         yield ['itemprototypePkOption'];
@@ -247,8 +229,6 @@ final class BuildTest extends TestCase
         yield ['mapCreate'];
         yield ['mapUpdate'];
         yield ['mapDelete'];
-        yield ['mapIsReadable'];
-        yield ['mapIsWritable'];
         yield ['mapCheckCircleSelementsLink'];
         yield ['mapTableName'];
         yield ['mapPk'];
@@ -264,8 +244,6 @@ final class BuildTest extends TestCase
         yield ['proxyCreate'];
         yield ['proxyUpdate'];
         yield ['proxyDelete'];
-        yield ['proxyIsReadable'];
-        yield ['proxyIsWritable'];
         yield ['proxyTableName'];
         yield ['proxyPk'];
         yield ['proxyPkOption'];
@@ -281,8 +259,6 @@ final class BuildTest extends TestCase
         yield ['serviceAddTimes'];
         yield ['serviceGetSla'];
         yield ['serviceDeleteTimes'];
-        yield ['serviceIsReadable'];
-        yield ['serviceIsWritable'];
         yield ['serviceTableName'];
         yield ['servicePk'];
         yield ['servicePkOption'];
@@ -298,8 +274,6 @@ final class BuildTest extends TestCase
         yield ['screenitemUpdate'];
         yield ['screenitemUpdateByPosition'];
         yield ['screenitemDelete'];
-        yield ['screenitemIsReadable'];
-        yield ['screenitemIsWritable'];
         yield ['screenitemTableName'];
         yield ['screenitemPk'];
         yield ['screenitemPkOption'];
@@ -320,8 +294,6 @@ final class BuildTest extends TestCase
         yield ['templateMassAdd'];
         yield ['templateMassUpdate'];
         yield ['templateMassRemove'];
-        yield ['templateIsReadable'];
-        yield ['templateIsWritable'];
         yield ['templateTableName'];
         yield ['templatePk'];
         yield ['templatescreenGet'];
@@ -348,8 +320,6 @@ final class BuildTest extends TestCase
         yield ['triggerDeleteDependencies'];
         yield ['triggerSyncTemplates'];
         yield ['triggerSyncTemplateDependencies'];
-        yield ['triggerIsReadable'];
-        yield ['triggerIsWritable'];
         yield ['triggerTableName'];
         yield ['triggerPk'];
         yield ['triggerPkOption'];
@@ -372,8 +342,6 @@ final class BuildTest extends TestCase
         yield ['userDeleteMedia'];
         yield ['userDeleteMediaReal'];
         yield ['userCheckAuthentication'];
-        yield ['userIsReadable'];
-        yield ['userIsWritable'];
         yield ['userTableName'];
         yield ['userPk'];
         yield ['userPkOption'];
@@ -383,8 +351,6 @@ final class BuildTest extends TestCase
         yield ['usergroupMassAdd'];
         yield ['usergroupMassUpdate'];
         yield ['usergroupDelete'];
-        yield ['usergroupIsReadable'];
-        yield ['usergroupIsWritable'];
         yield ['usergroupTableName'];
         yield ['usergroupPk'];
         yield ['usergroupPkOption'];
@@ -414,8 +380,6 @@ final class BuildTest extends TestCase
         yield ['httptestCreate'];
         yield ['httptestUpdate'];
         yield ['httptestDelete'];
-        yield ['httptestIsReadable'];
-        yield ['httptestIsWritable'];
         yield ['httptestTableName'];
         yield ['httptestPk'];
         yield ['httptestPkOption'];
