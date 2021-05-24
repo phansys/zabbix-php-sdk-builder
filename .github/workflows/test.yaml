@@ -29,14 +29,14 @@ jobs:
                       zabbix-version: '3.0.0'
                       allowed-to-fail: false
                     - php-version: '7.3'
-                      zabbix-version: '3.4.15'
+                      zabbix-version: '3.0.32'
                       allowed-to-fail: false
-#                    - php-version: '7.3'
-#                      zabbix-version: '4.0.0'
-#                      allowed-to-fail: false
-#                    - php-version: '7.3'
-#                      zabbix-version: '4.4.4'
-#                      allowed-to-fail: false
+                    - php-version: '7.3'
+                      zabbix-version: '3.2.0'
+                      allowed-to-fail: false
+                    - php-version: '7.3'
+                      zabbix-version: '3.2.11'
+                      allowed-to-fail: false
 #                    - php-version: '7.3'
 #                      zabbix-version: '5.0.0'
 #                      allowed-to-fail: false
