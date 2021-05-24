@@ -37,9 +37,12 @@ jobs:
                     - php-version: '7.3'
                       zabbix-version: '3.2.11'
                       allowed-to-fail: false
-#                    - php-version: '7.3'
-#                      zabbix-version: '5.0.0'
-#                      allowed-to-fail: false
+                    - php-version: '7.3'
+                      zabbix-version: '3.4.0'
+                      allowed-to-fail: false
+                    - php-version: '7.3'
+                      zabbix-version: '3.4.15'
+                      allowed-to-fail: false
 
         steps:
             - name: Checkout

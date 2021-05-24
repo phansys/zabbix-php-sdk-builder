@@ -231,13 +231,20 @@ foreach ($constantsArray['constant_names'] as $k => $name) {
 // initialize variable for API methods
 $apiMethods = '';
 
+$blacklistedMethods = array('checkInput');
+
 $anonymousFunctions = array(
     'apiinfo.version',
+    'user.checkauthentication',
+    'user.login',
 );
 
 // build API methods
 foreach ($apiArray as $resource => $actions) {
     foreach ($actions as $action) {
+        if (in_array($action, $blacklistedMethods, true)) {
+            continue;
+        }
         $apiMethod = $resource.'.'.strtolower($action);
         $methodPlaceholders = array(
             'API_METHOD' => $apiMethod,
