@@ -31,6 +31,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\InvalidArgumentException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
@@ -286,10 +287,12 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
 
-                throw new Exception(sprintf('%s: %s', $e->getMessage(), $this->response->getBody()->getContents()), $e->getCode());
+                throw new Exception(sprintf('%s: %s', $e->getMessage(), $this->response->getBody()->getContents()), $e->getCode(), $e);
             }
 
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
+        } catch (TransferException $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e);
         } finally {
             // Debug logging.
             if ($this->printCommunication) {
