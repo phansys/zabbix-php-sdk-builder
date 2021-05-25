@@ -29,12 +29,19 @@ namespace ZabbixSdkBuilder\Tests;
 
 use PHPUnit\Framework\TestCase;
 use ZabbixApi\ZabbixApi;
+use ZabbixApi\ZabbixApiInterface;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
 final class BuildTest extends TestCase
 {
+    public function testZabbixClass(): void
+    {
+        $this->assertTrue(class_exists(ZabbixApi::class));
+        $this->assertTrue(is_subclass_of(ZabbixApi::class, ZabbixApiInterface::class));
+    }
+
     public function testZabbixApiSymbolsCount(): void
     {
         $zabbix = new ZabbixApi('https://localhost/json_rpc.php', 'zabbix', 'very_secret');
