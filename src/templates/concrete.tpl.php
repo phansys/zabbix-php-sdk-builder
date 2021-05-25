@@ -198,22 +198,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     }
 
     /**
-     * Sets the context for SSL-enabled connections.
-     *
-     * @see https://php.net/manual/en/context.ssl.php.
-     *
-     * @param array $context Array with the SSL context
-     *
-     * @return <CLASSNAME_INTERFACE>
-     */
-    public function setSslContext(array $context)
-    {
-        $this->sslContext = $context;
-
-        return $this;
-    }
-
-    /**
      * Returns the default params.
      *
      * @return array Array with default params
@@ -290,13 +274,13 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
 
         // Add auth token if required.
         if ($auth) {
-            $this->request[RequestOptions::AUTH] = $this->authToken;
+            $this->requestOptions[RequestOptions::AUTH] = $this->authToken;
         }
 
         try {
             $this->response = $this->client->request('POST', $this->apiUrl, $this->requestOptions + array(
                 RequestOptions::HEADERS => array('Content-type' => 'application/json-rpc'),
-                RequestOptions::JSON => $this->payload,
+                RequestOptions::JSON => $this->requestPayload,
             ));
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
@@ -309,7 +293,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         } finally {
             // Debug logging.
             if ($this->printCommunication) {
-                echo $this->response."\n";
+                echo $this->response->getBody()."\n";
             }
         }
 
@@ -524,7 +508,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     }
 
     /**
-     * @param ResponseInterface $response
      * @param string|null $resultArrayKey
      * @param bool $assoc
      *

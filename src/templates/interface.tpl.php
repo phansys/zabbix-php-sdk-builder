@@ -45,7 +45,7 @@ interface <CLASSNAME_INTERFACE>
      *
      * @param string $apiUrl API url
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setApiUrl($apiUrl);
 
@@ -54,7 +54,7 @@ interface <CLASSNAME_INTERFACE>
      *
      * @param string $authToken API auth ID
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setAuthToken($authToken);
 
@@ -64,7 +64,7 @@ interface <CLASSNAME_INTERFACE>
      * @param string $user HTTP basic authorization username
      * @param string $password HTTP basic authorization password
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setBasicAuthorization($user, $password);
 
@@ -82,7 +82,7 @@ interface <CLASSNAME_INTERFACE>
      *
      * @throws Exception
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function setDefaultParams(array $defaultParams);
 
@@ -91,7 +91,7 @@ interface <CLASSNAME_INTERFACE>
      *
      * @param bool $print Boolean if requests/responses should be printed out
      *
-     * @return <CLASSNAME_ABSTRACT>
+     * @return <CLASSNAME_INTERFACE>
      */
     public function printCommunication($print = true);
 
