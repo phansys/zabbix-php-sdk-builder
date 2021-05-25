@@ -116,7 +116,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string|null $httpPassword Password for HTTP basic authorization
      * @param string|null $authToken Already issued auth token (e.g. extracted from cookies)
      * @param ClientInterface|null $client
-     * @param array|null $clientOptions Client options
+     * @param array $clientOptions Client options
      */
     public function __construct($apiUrl = null, $user = null, $password = null, $httpUser = null, $httpPassword = null, $authToken = null, ClientInterface $client = null, array $clientOptions = array())
     {
