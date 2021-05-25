@@ -345,7 +345,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      */
     public function userLogin($params = array(), $arrayKeyProperty = null, $tokenCacheDir = null)
     {
-        // reset auth token
+        // Reset auth token.
         $this->authToken = null;
         $tokenCacheFile = null;
 
@@ -353,32 +353,32 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
             $tokenCacheDir = sys_get_temp_dir();
         }
 
-        // build filename for cached auth token
+        // Build filename for cached auth token.
         if ($tokenCacheDir && array_key_exists('user', $params) && is_dir($tokenCacheDir)) {
             $uid = function_exists('posix_getuid') ? posix_getuid() : -1;
             $tokenCacheFile = $tokenCacheDir.'/.zabbixapi-token-'.md5($params['user'].'|'.$uid);
         }
 
-        // try to read cached auth token
+        // Try to read cached auth token.
         if (null !== $tokenCacheFile && is_file($tokenCacheFile)) {
             try {
-                // get auth token and try to execute a user.get (dummy check)
+                // Get auth token and try to execute a "user.get" call (dummy check).
                 $this->authToken = file_get_contents($tokenCacheFile);
                 $this->userGet(array('countOutput' => true));
             } catch (Exception $e) {
-                // user.get failed, token invalid so reset it and remove file
+                // "user.get" call failed, token invalid, so reset it and remove file.
                 $this->authToken = null;
                 unlink($tokenCacheFile);
             }
         }
 
-        // no cached token found so far, so login (again)
+        // No cached token found so far, so login (again).
         if (null === $this->authToken) {
-            // login to get the auth token
+            // Login to get the auth token.
             $params = $this->getRequestParamsArray($params);
             $this->authToken = $this->request('user.login', $params, $arrayKeyProperty, false);
 
-            // save cached auth token
+            // Save cached auth token.
             if (null !== $tokenCacheFile) {
                 file_put_contents($tokenCacheFile, $this->authToken);
                 chmod($tokenCacheFile, 0600);
