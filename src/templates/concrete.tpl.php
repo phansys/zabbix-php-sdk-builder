@@ -83,11 +83,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     private $id;
 
     /**
-     * @var array
-     */
-    private $requestPayload = array();
-
-    /**
      * @var ResponseInterface
      */
     private $response;
@@ -246,16 +241,13 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string|null $resultArrayKey
      * @param bool $auth Enable authentication (default true)
      * @param bool $assoc Return the result as an associative array
+     * @param int $remainingAuthAttempts Number of remaining authentication attempts before failing.
      *
      * @return mixed API JSON response
      */
-    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = true)
+    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = true, $remainingAuthAttempts = 1)
     {
-        if (null === $this->authToken && $auth && null !== $this->user && null !== $this->password) {
-            $this->userLogin(array('user' => $this->user, 'password' => $this->password));
-        }
-
-        // sanity check and conversion for params array
+        // Sanity check and conversion for params array.
         if (!$params) {
             $params = array();
         } elseif (!is_array($params)) {
@@ -266,7 +258,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         $this->id = number_format(microtime(true), 4, '', '');
 
         // Build request payload.
-        $this->requestPayload = array(
+        $requestPayload = array(
             'jsonrpc' => '2.0',
             'method' => $method,
             'params' => $params,
@@ -274,14 +266,18 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         );
 
         // Add auth token if required.
-        if ($auth) {
-            $this->requestPayload['auth'] = $this->authToken;
+        if ($auth && null !== $this->user) {
+            $requestPayload['auth'] = $this->getAuthToken();
+        }
+
+        if ($this->printCommunication) {
+            $this->requestOptions[RequestOptions::DEBUG] = true;
         }
 
         try {
             $this->response = $this->client->request('POST', $this->apiUrl, $this->requestOptions + array(
                 RequestOptions::HEADERS => array('Content-type' => 'application/json-rpc'),
-                RequestOptions::JSON => $this->requestPayload,
+                RequestOptions::JSON => $requestPayload,
             ));
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
@@ -300,7 +296,22 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
             }
         }
 
-        return $this->decodeResponse($this->response, $resultArrayKey, $assoc);
+        try {
+            $response = $this->decodeResponse($this->response, $resultArrayKey, $assoc);
+        } catch (Exception $e) {
+            // If the request is not authorized due an authentication issue, attempt to login again and retry the operation.
+            if ($auth && self::UNAUTHORIZED_ERROR_CODE === $e->getCode() && self::UNAUTHORIZED_ERROR_MESSAGE === $e->getMessage() &&
+                $remainingAuthAttempts > 0 && null !== $this->user && null !== $this->password
+            ) {
+                $this->getAuthToken(false);
+
+                return $this->request($method, $params, $resultArrayKey, $auth, $assoc, --$remainingAuthAttempts);
+            }
+
+            throw $e;
+        }
+
+        return $response;
     }
 
     /**
@@ -311,81 +322,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     public function getResponse()
     {
         return $this->response;
-    }
-
-    /**
-     * Login into the API.
-     *
-     * This will also retrieves the auth Token, which will be used for any
-     * further requests. Please be aware that by default the received auth
-     * token will be cached on the filesystem.
-     *
-     * When a user is successfully logged in for the first time, the token will
-     * be cached / stored in the $tokenCacheDir directory. For every future
-     * request, the cached auth token will automatically be loaded and the
-     * user.login is skipped. If the auth token is invalid/expired, user.login
-     * will be executed, and the auth token will be cached again.
-     *
-     * The $params Array can be used, to pass parameters to the Zabbix API.
-     * For more information about these parameters, check the Zabbix API
-     * documentation at https://www.zabbix.com/documentation/.
-     *
-     * The $arrayKeyProperty can be used to get an associative instead of an
-     * indexed array as response. A valid value for the $arrayKeyProperty is
-     * is any property of the returned JSON objects (e.g. "name", "host",
-     * "hostid", "graphid", "screenitemid").
-     *
-     * @param array $params Parameters to pass through
-     * @param string|null $arrayKeyProperty Object property for key of array
-     * @param string|null $tokenCacheDir Path to a directory to store the auth token
-     *
-     * @throws Exception
-     *
-     * @return string
-     */
-    public function userLogin($params = array(), $arrayKeyProperty = null, $tokenCacheDir = null)
-    {
-        // Reset auth token.
-        $this->authToken = null;
-        $tokenCacheFile = null;
-
-        if (null === $tokenCacheDir) {
-            $tokenCacheDir = sys_get_temp_dir();
-        }
-
-        // Build filename for cached auth token.
-        if ($tokenCacheDir && array_key_exists('user', $params) && is_dir($tokenCacheDir)) {
-            $uid = function_exists('posix_getuid') ? posix_getuid() : -1;
-            $tokenCacheFile = $tokenCacheDir.'/.zabbixapi-token-'.md5($params['user'].'|'.$uid);
-        }
-
-        // Try to read cached auth token.
-        if (null !== $tokenCacheFile && is_file($tokenCacheFile)) {
-            try {
-                // Get auth token and try to execute a "user.get" call (dummy check).
-                $this->authToken = file_get_contents($tokenCacheFile);
-                $this->userGet(array('countOutput' => true));
-            } catch (Exception $e) {
-                // "user.get" call failed, token invalid, so reset it and remove file.
-                $this->authToken = null;
-                unlink($tokenCacheFile);
-            }
-        }
-
-        // No cached token found so far, so login (again).
-        if (null === $this->authToken) {
-            // Login to get the auth token.
-            $params = $this->getRequestParamsArray($params);
-            $this->authToken = $this->request('user.login', $params, $arrayKeyProperty, false);
-
-            // Save cached auth token.
-            if (null !== $tokenCacheFile) {
-                file_put_contents($tokenCacheFile, $this->authToken);
-                chmod($tokenCacheFile, 0600);
-            }
-        }
-
-        return $this->authToken;
     }
 
     /**
@@ -533,7 +469,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
 
         if ($assoc) {
             if (isset($this->responseDecoded['error'])) {
-                throw new Exception(sprintf('API error %s: %s', $this->responseDecoded['error']['code'], $this->responseDecoded['error']['data']));
+                throw new Exception($this->responseDecoded['error']['data'], $this->responseDecoded['error']['code']);
             }
             if (null !== $resultArrayKey) {
                 return $this->convertToAssociatveArray($this->responseDecoded['result'], $resultArrayKey);
@@ -543,7 +479,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         }
 
         if (property_exists($this->responseDecoded, 'error') && $error = $this->responseDecoded->error) {
-            throw new Exception(sprintf('API error %s: %s', $error->code, $error->data));
+            throw new Exception($error->data, $error->code);
         }
 
         if (null !== $resultArrayKey && is_array($this->responseDecoded->result)) {
@@ -551,5 +487,55 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         }
 
         return $this->responseDecoded->result;
+    }
+
+    private function getAuthToken($fromCache = true, $tokenCacheDir = null)
+    {
+        if ($fromCache && null !== $this->authToken) {
+            return $this->authToken;
+        }
+
+        $tokenCacheFile = null;
+
+        if (null === $tokenCacheDir) {
+            $tokenCacheDir = sys_get_temp_dir();
+        }
+
+        // Build filename for cached auth token.
+        if ($tokenCacheDir && is_dir($tokenCacheDir)) {
+            $uid = function_exists('posix_getuid') ? posix_getuid() : -1;
+            $tokenCacheFile = $tokenCacheDir.'/.zabbixapi-token-'.md5($this->user.'|'.$uid);
+        }
+
+        if ($fromCache) {
+            // Try to read cached auth token.
+            if (null !== $tokenCacheFile && is_file($tokenCacheFile)) {
+                $cachedToken = @file_get_contents($tokenCacheFile);
+
+                if (false === $cachedToken) {
+                    // Unlink corrupted cached token file.
+                    @unlink($tokenCacheFile);
+
+                    throw new Exception('Failed to read cached token.');
+                }
+
+                $this->authToken = $cachedToken;
+            }
+        }
+
+        // No cached token found so far, so login.
+        if (null === $this->authToken) {
+            // login to get the auth token
+            $params = $this->getRequestParamsArray(array('user' => $this->user, 'password' => $this->password));
+            $this->authToken = $this->userLogin($params);
+
+            // Persist cached auth token.
+            if (null !== $tokenCacheFile) {
+                @file_put_contents($tokenCacheFile, $this->authToken);
+                @chmod($tokenCacheFile, 0600);
+            }
+        }
+
+        return $this->authToken;
     }
 }

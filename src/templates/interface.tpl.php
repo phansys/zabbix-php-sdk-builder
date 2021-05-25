@@ -30,7 +30,11 @@ namespace ZabbixApi;
 use Psr\Http\Message\ResponseInterface;
 
 interface <CLASSNAME_INTERFACE>
-{<!START_API_CONSTANT>
+{
+    const UNAUTHORIZED_ERROR_CODE = -32602;
+
+    const UNAUTHORIZED_ERROR_MESSAGE = 'Not authorised.';
+<!START_API_CONSTANT>
     const <PHP_CONST_NAME> = <PHP_CONST_VALUE>;
 <!END_API_CONSTANT>
     /**
@@ -114,38 +118,6 @@ interface <CLASSNAME_INTERFACE>
      * @return ResponseInterface
      */
     public function getResponse();
-
-    /**
-     * Login into the API.
-     *
-     * This will also retrieves the auth Token, which will be used for any
-     * further requests. Please be aware that by default the received auth
-     * token will be cached on the filesystem.
-     *
-     * When a user is successfully logged in for the first time, the token will
-     * be cached / stored in the $tokenCacheDir directory. For every future
-     * request, the cached auth token will automatically be loaded and the
-     * user.login is skipped. If the auth token is invalid/expired, user.login
-     * will be executed, and the auth token will be cached again.
-     *
-     * The $params Array can be used, to pass parameters to the Zabbix API.
-     * For more information about these parameters, check the Zabbix API
-     * documentation at https://www.zabbix.com/documentation/.
-     *
-     * The $arrayKeyProperty can be used to get an associative instead of an
-     * indexed array as response. A valid value for the $arrayKeyProperty is
-     * is any property of the returned JSON objects (e.g. "name", "host",
-     * "hostid", "graphid", "screenitemid").
-     *
-     * @param array $params Parameters to pass through
-     * @param string|null $arrayKeyProperty Object property for key of array
-     * @param string|null $tokenCacheDir Path to a directory to store the auth token
-     *
-     * @throws Exception
-     *
-     * @return string
-     */
-    public function userLogin($params = array(), $arrayKeyProperty = null, $tokenCacheDir = null);
 
     /**
      * Logout from the API.

@@ -72,7 +72,9 @@ foreach ($builder->getApiClassMap() as $resource => $class) {
     // Loop through defined methods.
     foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC & ~\ReflectionMethod::IS_STATIC) as $method) {
         // Add action to API array.
-        if ('CZBXAPI' !== $method->class && !('user' === $resource && 'login' === $method->name) && !('user' === $resource && 'logout' === $method->name) && !$method->isConstructor() && !$method->isDestructor() && !$method->isAbstract()) {
+        if ('CZBXAPI' !== $method->class && !('user' === $resource && 'logout' === $method->name) &&
+            !$method->isConstructor() && !$method->isDestructor() && !$method->isAbstract()
+        ) {
             $apiArray[$resource][] = $method->name;
         }
     }
