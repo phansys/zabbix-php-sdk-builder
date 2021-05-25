@@ -249,7 +249,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @return mixed API JSON response
      */
-    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = false)
+    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = true)
     {
         if (null === $this->authToken && $auth && null !== $this->user && null !== $this->password) {
             $this->userLogin(array('user' => $this->user, 'password' => $this->password));
@@ -275,7 +275,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
 
         // Add auth token if required.
         if ($auth) {
-            $this->requestOptions[RequestOptions::AUTH] = $this->authToken;
+            $this->requestPayload['auth'] = $this->authToken;
         }
 
         try {
@@ -518,7 +518,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @return mixed The decoded JSON data
      */
-    private function decodeResponse(ResponseInterface $response, $resultArrayKey = null, $assoc = false)
+    private function decodeResponse(ResponseInterface $response, $resultArrayKey = null, $assoc = true)
     {
         $content = $response->getBody();
 
