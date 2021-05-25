@@ -14,9 +14,6 @@ jobs:
 
         continue-on-error: ${{ matrix.allowed-to-fail }}
 
-        env:
-            SYMFONY_REQUIRE: ${{matrix.symfony-require}}
-
         strategy:
             matrix:
                 php-version:
