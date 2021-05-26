@@ -111,7 +111,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string|null $httpUser Username for HTTP basic authorization
      * @param string|null $httpPassword Password for HTTP basic authorization
      * @param string|null $authToken Already issued auth token (e.g. extracted from cookies)
-     * @param ClientInterface|null $client
      * @param array $clientOptions Client options
      */
     public function __construct($apiUrl = null, $user = null, $password = null, $httpUser = null, $httpPassword = null, $authToken = null, ClientInterface $client = null, array $clientOptions = array())
@@ -241,7 +240,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string|null $resultArrayKey
      * @param bool $auth Enable authentication (default true)
      * @param bool $assoc Return the result as an associative array
-     * @param int $remainingAuthAttempts Number of remaining authentication attempts before failing.
+     * @param int $remainingAuthAttempts Number of remaining authentication attempts before failing
      *
      * @return mixed API JSON response
      */
@@ -461,10 +460,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         try {
             $this->responseDecoded = \GuzzleHttp\json_decode($content, $assoc);
         } catch (InvalidArgumentException $ex) {
-            throw new Exception(sprintf(
-                'Response body could not be parsed since the JSON structure could not be decoded: %s',
-                $content
-            ), $ex->getCode(), $ex);
+            throw new Exception(sprintf('Response body could not be parsed since the JSON structure could not be decoded: %s', $content), $ex->getCode(), $ex);
         }
 
         if ($assoc) {
