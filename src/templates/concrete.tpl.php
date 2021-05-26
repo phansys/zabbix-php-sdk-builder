@@ -56,7 +56,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @var array
      */
-    private $defaultParams = array();
+    private $defaultParams = [];
 
     /**
      * @var string|null
@@ -102,7 +102,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     /**
      * @var array<string, mixed>
      */
-    private $requestOptions = array();
+    private $requestOptions = [];
 
     /**
      * @param string|null $apiUrl API url (e.g. https://FQDN/zabbix/api_jsonrpc.php)
@@ -113,7 +113,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @param string|null $authToken Already issued auth token (e.g. extracted from cookies)
      * @param array $clientOptions Client options
      */
-    public function __construct($apiUrl = null, $user = null, $password = null, $httpUser = null, $httpPassword = null, $authToken = null, ClientInterface $client = null, array $clientOptions = array())
+    public function __construct($apiUrl = null, $user = null, $password = null, $httpUser = null, $httpPassword = null, $authToken = null, ClientInterface $client = null, array $clientOptions = [])
     {
         if (null !== $client && !empty($clientOptions)) {
             throw new \InvalidArgumentException('If argument 7 is provided, argument 8 must be omitted or passed with an empty array as value');
@@ -187,7 +187,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      */
     public function setBasicAuthorization($user, $password)
     {
-        $this->requestOptions[RequestOptions::AUTH] = array($user, $password);
+        $this->requestOptions[RequestOptions::AUTH] = [$user, $password];
 
         return $this;
     }
@@ -248,21 +248,21 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     {
         // Sanity check and conversion for params array.
         if (!$params) {
-            $params = array();
+            $params = [];
         } elseif (!is_array($params)) {
-            $params = array($params);
+            $params = [$params];
         }
 
         // Generate request ID.
         $this->id = number_format(microtime(true), 4, '', '');
 
         // Build request payload.
-        $requestPayload = array(
+        $requestPayload = [
             'jsonrpc' => '2.0',
             'method' => $method,
             'params' => $params,
             'id' => $this->id,
-        );
+        ];
 
         // Add auth token if required.
         if ($auth && null !== $this->user) {
@@ -274,10 +274,10 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         }
 
         try {
-            $this->response = $this->client->request('POST', $this->apiUrl, $this->requestOptions + array(
-                RequestOptions::HEADERS => array('Content-type' => 'application/json-rpc'),
+            $this->response = $this->client->request('POST', $this->apiUrl, $this->requestOptions + [
+                RequestOptions::HEADERS => ['Content-type' => 'application/json-rpc'],
                 RequestOptions::JSON => $requestPayload,
-            ));
+            ]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
@@ -344,7 +344,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @return mixed
      */
-    public function userLogout($params = array(), $arrayKeyProperty = null)
+    public function userLogout($params = [], $arrayKeyProperty = null)
     {
         $params = $this->getRequestParamsArray($params);
         $response = $this->request('user.logout', $params, $arrayKeyProperty);
@@ -372,7 +372,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      *
      * @return mixed
      */
-    public function <PHP_METHOD>($params = array(), $arrayKeyProperty = null)
+    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null)
     {
         return $this->request('<API_METHOD>', $this->getRequestParamsArray($params), $arrayKeyProperty, <IS_AUTHENTICATION_REQUIRED>);
     }
@@ -393,7 +393,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         }
 
         // Loop through array and replace keys.
-        $newObjectArray = array();
+        $newObjectArray = [];
         foreach ($objectArray as $key => $object) {
             $newObjectArray[$object->{$useObjectProperty}] = $object;
         }
@@ -429,10 +429,10 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
     {
         if (is_scalar($params)) {
             // If params is a scalar value, turn it into an array.
-            $params = array($params);
+            $params = [$params];
         } elseif (!is_array($params)) {
             // If params isn't an array, create an empty one (e.g. for booleans, null).
-            $params = array();
+            $params = [];
         }
 
         $paramsCount = count($params);
@@ -522,7 +522,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         // No cached token found so far, so login.
         if (null === $this->authToken) {
             // login to get the auth token
-            $params = $this->getRequestParamsArray(array('user' => $this->user, 'password' => $this->password));
+            $params = $this->getRequestParamsArray(['user' => $this->user, 'password' => $this->password]);
             $this->authToken = $this->userLogin($params);
 
             // Persist cached auth token.

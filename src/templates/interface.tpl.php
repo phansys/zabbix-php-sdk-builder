@@ -140,7 +140,7 @@ interface <CLASSNAME_INTERFACE>
      *
      * @return mixed
      */
-    public function userLogout($params = array(), $arrayKeyProperty = null);
+    public function userLogout($params = [], $arrayKeyProperty = null);
 <!START_API_METHOD>
     /**
      * Requests the Zabbix API and returns the response of the method "<API_METHOD>".
@@ -161,5 +161,5 @@ interface <CLASSNAME_INTERFACE>
      *
      * @return mixed
      */
-    public function <PHP_METHOD>($params = array(), $arrayKeyProperty = null);
+    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null);
 <!END_API_METHOD>}
