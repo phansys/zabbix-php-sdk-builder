@@ -35,7 +35,7 @@ use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
+final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwareInterface
 {
     /**
      * Boolean if requests/responses should be printed out (JSON).
@@ -103,6 +103,11 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
      * @var array<string, mixed>
      */
     private $requestOptions = [];
+
+    /**
+     * @var string|null
+     */
+    private $tokenCacheDir;
 
     /**
      * @param string|null $apiUrl API url (e.g. https://FQDN/zabbix/api_jsonrpc.php)
@@ -230,6 +235,11 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         $this->printCommunication = (bool) $print;
 
         return $this;
+    }
+
+    public function setTokenCacheDir($directory)
+    {
+        $this->tokenCacheDir = $directory;
     }
 
     /**
@@ -485,17 +495,14 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>
         return $this->responseDecoded->result;
     }
 
-    private function getAuthToken($fromCache = true, $tokenCacheDir = null)
+    private function getAuthToken($fromCache = true)
     {
         if ($fromCache && null !== $this->authToken) {
             return $this->authToken;
         }
 
+        $tokenCacheDir = null !== $this->tokenCacheDir ? $this->tokenCacheDir : sys_get_temp_dir();
         $tokenCacheFile = null;
-
-        if (null === $tokenCacheDir) {
-            $tokenCacheDir = sys_get_temp_dir();
-        }
 
         // Build filename for cached auth token.
         if ($tokenCacheDir && is_dir($tokenCacheDir)) {

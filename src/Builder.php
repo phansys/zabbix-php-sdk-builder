@@ -33,7 +33,7 @@ namespace ZabbixSdkBuilder;
 class Builder
 {
     /**
-     * Class name for the abstract API class.
+     * Class name for the interface API class.
      */
     public const CLASSNAME_INTERFACE = 'ZabbixApiInterface';
 
@@ -41,6 +41,16 @@ class Builder
      * Filename for the Zabbix API interface.
      */
     public const FILENAME_INTERFACE = self::CLASSNAME_INTERFACE.'.php';
+
+    /**
+     * Class name for the token cache interface.
+     */
+    public const CLASSNAME_TOKEN_CACHE_INTERFACE = 'TokenCacheAwareInterface';
+
+    /**
+     * Filename for the token cache interface.
+     */
+    public const FILENAME_TOKEN_CACHE_INTERFACE = self::CLASSNAME_TOKEN_CACHE_INTERFACE.'.php';
 
     /**
      * Class name for the concrete API class.

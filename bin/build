@@ -227,3 +227,18 @@ if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION, $fil
 }
 
 echo 'BUILT: exception class file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_EXCEPTION.'"'."\n";
+
+// Build token cache interface template.
+if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/token_cache_aware_interface.tpl.php')) {
+    throw new \RuntimeException('Error.');
+}
+
+// Build file content.
+$fileContent = $builder->replacePlaceholders($template, $templatePlaceholders);
+
+// write abstract class
+if (!file_put_contents(Builder::PATH_BUILD.'/'.Builder::FILENAME_TOKEN_CACHE_INTERFACE, $fileContent)) {
+    throw new \RuntimeException('Error.');
+}
+
+echo 'BUILT: token cache interface file "'.Builder::PATH_BUILD.'/'.Builder::FILENAME_TOKEN_CACHE_INTERFACE.'"'."\n";
