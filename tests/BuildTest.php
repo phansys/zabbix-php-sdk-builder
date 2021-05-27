@@ -25,11 +25,11 @@
  * @author confirm IT solutions GmbH, Rathausstrase 14, CH-6340 Baar
  */
 
-namespace ZabbixSdkBuilder\Tests;
+namespace Confirm\ZabbixSdkBuilder\Tests;
 
+use Confirm\ZabbixApi\ZabbixApi;
+use Confirm\ZabbixApi\ZabbixApiInterface;
 use PHPUnit\Framework\TestCase;
-use ZabbixApi\ZabbixApi;
-use ZabbixApi\ZabbixApiInterface;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>

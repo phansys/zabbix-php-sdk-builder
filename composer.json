@@ -37,17 +37,17 @@
     },
     "autoload": {
         "psr-4": {
-            "ZabbixSdkBuilder\\": [
+            "Confirm\\ZabbixSdkBuilder\\": [
                 "src/"
             ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ZabbixApi\\": [
+            "Confirm\\ZabbixApi\\": [
                 "build/"
             ],
-            "ZabbixApi\\Tests\\": [
+            "Confirm\\ZabbixApi\\Tests\\": [
                 "tests/"
             ]
         }

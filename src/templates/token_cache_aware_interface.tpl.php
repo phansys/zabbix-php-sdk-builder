@@ -25,7 +25,7 @@
  * @author confirm IT solutions GmbH, Rathausstrase 14, CH-6340 Baar
  */
 
-namespace ZabbixApi;
+namespace Confirm\ZabbixApi;
 
 interface TokenCacheAwareInterface
 {

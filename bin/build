@@ -26,7 +26,7 @@
  * @author confirm IT solutions GmbH, Rathausstrase 14, CH-6340 Baar
  */
 
-use ZabbixSdkBuilder\Builder;
+use Confirm\ZabbixSdkBuilder\Builder;
 
 if (!in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     throw new \RuntimeException('Error: '.__FILE__.' must be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL);
