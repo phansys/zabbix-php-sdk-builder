@@ -7,6 +7,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$result on array\\|bool\\|float\\|int\\|object\\|string\\.$#"
-			count: 3
+			count: 2
 			path: build/ZabbixApi.php
 

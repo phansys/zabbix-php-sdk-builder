@@ -248,13 +248,13 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
      * @param string $method Name of the API method
      * @param array|mixed|null $params Additional parameters
      * @param string|null $resultArrayKey
-     * @param bool $auth Enable authentication (default true)
      * @param bool $assoc Return the result as an associative array
+     * @param bool $auth Enable authentication (default true)
      * @param int $remainingAuthAttempts Number of remaining authentication attempts before failing
      *
      * @return mixed API JSON response
      */
-    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = true, $remainingAuthAttempts = 1)
+    public function request($method, $params = null, $resultArrayKey = null, $assoc = true, $auth = true, $remainingAuthAttempts = 1)
     {
         // Sanity check and conversion for params array.
         if (!$params) {
@@ -349,15 +349,16 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
      *
      * @param array $params Parameters to pass through
      * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
      *
      * @throws Exception
      *
      * @return mixed
      */
-    public function userLogout($params = [], $arrayKeyProperty = null)
+    public function userLogout($params = [], $arrayKeyProperty = null, $assoc = true)
     {
         $params = $this->getRequestParamsArray($params);
-        $response = $this->request('user.logout', $params, $arrayKeyProperty);
+        $response = $this->request('user.logout', $params, $arrayKeyProperty, $assoc);
         $this->authToken = null;
 
         return $response;
@@ -377,39 +378,57 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
      *
      * @param mixed $params Zabbix API parameters
      * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
      *
      * @throws Exception
      *
      * @return mixed
      */
-    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null)
+    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null, $assoc = true)
     {
-        return $this->request('<API_METHOD>', $this->getRequestParamsArray($params), $arrayKeyProperty, <IS_AUTHENTICATION_REQUIRED>);
+        return $this->request('<API_METHOD>', $this->getRequestParamsArray($params), $arrayKeyProperty, $assoc, <IS_AUTHENTICATION_REQUIRED>);
     }
 <!END_API_METHOD>
     /**
-     * Converts an indexed array to an associative array.
+     * Returns the array or the instance of `\stdClass` indexed by the given parameter or property
+     * name.
      *
-     * @param array $objectArray Indexed array with objects
+     * @param array|\stdClass|mixed $objectOrArray Indexed array with objects
      * @param string $useObjectProperty Object property to use as array key
      *
-     * @return array<string, mixed> associative array
+     * @return array<string, mixed>|\stdClass
      */
-    private function convertToAssociatveArray(array $objectArray, $useObjectProperty)
+    private function convertToAssociatveArray($objectOrArray, $useObjectProperty)
     {
-        // Sanity check.
-        if (empty($objectArray) || !property_exists($objectArray[0], $useObjectProperty)) {
-            return $objectArray;
+        if (is_array($objectOrArray)) {
+            // Sanity check.
+            if (!empty($objectOrArray) && !isset(current($objectOrArray)[$useObjectProperty])) {
+                throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist in the given elements.', $useObjectProperty));
+            }
+
+            // Return associative array.
+            return array_column($objectOrArray, null, $useObjectProperty);
         }
 
-        // Loop through array and replace keys.
-        $newObjectArray = [];
-        foreach ($objectArray as $key => $object) {
-            $newObjectArray[$object->{$useObjectProperty}] = $object;
+        if (is_object($objectOrArray)) {
+            $objectVars = get_object_vars($objectOrArray);
+
+            // Sanity check.
+            if (!empty($objectVars) && !property_exists(current($objectVars), $useObjectProperty)) {
+                throw new \InvalidArgumentException(sprintf('Property "%s" does not exist in the given elements.', $useObjectProperty));
+            }
+
+            // Loop through array and replace keys.
+            $newObject = new \stdClass();
+            foreach ($objectVars as $key => $object) {
+                $newObject->{$object->{$useObjectProperty}} = $object;
+            }
+
+            // Return object indexed by the given property value.
+            return $newObject;
         }
 
-        // Return associative array.
-        return $newObjectArray;
+        throw new \InvalidArgumentException(sprintf('Argument 1 passed to "%s()" must be of type "array" or an instance of "\stdClass", "%s" given.', __METHOD__, gettype($objectOrArray)));
     }
 
     /**
@@ -488,7 +507,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             throw new Exception($error->data, $error->code);
         }
 
-        if (null !== $resultArrayKey && is_array($this->responseDecoded->result)) {
+        if (null !== $resultArrayKey) {
             return $this->convertToAssociatveArray($this->responseDecoded->result, $resultArrayKey);
         }
 

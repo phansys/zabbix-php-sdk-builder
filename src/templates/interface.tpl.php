@@ -135,12 +135,13 @@ interface <CLASSNAME_INTERFACE>
      *
      * @param array $params Parameters to pass through
      * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
      *
      * @throws Exception
      *
      * @return mixed
      */
-    public function userLogout($params = [], $arrayKeyProperty = null);
+    public function userLogout($params = [], $arrayKeyProperty = null, $assoc = true);
 <!START_API_METHOD>
     /**
      * Requests the Zabbix API and returns the response of the method "<API_METHOD>".
@@ -156,10 +157,11 @@ interface <CLASSNAME_INTERFACE>
      *
      * @param mixed $params Zabbix API parameters
      * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
      *
      * @throws Exception
      *
      * @return mixed
      */
-    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null);
+    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null, $assoc = true);
 <!END_API_METHOD>}
