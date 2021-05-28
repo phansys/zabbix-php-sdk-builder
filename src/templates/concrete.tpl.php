@@ -243,6 +243,72 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
     }
 
     /**
+     * Returns the last JSON API response.
+     *
+     * @return ResponseInterface
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Logout from the API.
+     *
+     * This will also reset the auth Token.
+     *
+     * The $params Array can be used, to pass parameters to the Zabbix API.
+     * For more information about these parameters, check the Zabbix API
+     * documentation at https://www.zabbix.com/documentation/.
+     *
+     * The $arrayKeyProperty can be used to get an associative instead of an
+     * indexed array as response. A valid value for the $arrayKeyProperty is
+     * is any property of the returned JSON objects (e.g. "name", "host",
+     * "hostid", "graphid", "screenitemid").
+     *
+     * @param array $params Parameters to pass through
+     * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function userLogout($params = [], $arrayKeyProperty = null, $assoc = true)
+    {
+        $params = $this->getRequestParamsArray($params);
+        $response = $this->request('user.logout', $params, $arrayKeyProperty, $assoc);
+        $this->authToken = null;
+
+        return $response;
+    }
+<!START_API_METHOD>
+    /**
+     * Requests the Zabbix API and returns the response of the method "<API_METHOD>".
+     *
+     * The $params Array can be used, to pass parameters to the Zabbix API.
+     * For more information about these parameters, check the Zabbix API
+     * documentation at https://www.zabbix.com/documentation/.
+     *
+     * The $arrayKeyProperty can be used to get an associative instead of an
+     * indexed array as response. A valid value for the $arrayKeyProperty is
+     * is any property of the returned JSON objects (e.g. "name", "host",
+     * "hostid", "graphid", "screenitemid").
+     *
+     * @param mixed $params Zabbix API parameters
+     * @param string|null $arrayKeyProperty Object property for key of array
+     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null, $assoc = true)
+    {
+        return $this->request('<API_METHOD>', $this->getRequestParamsArray($params), $arrayKeyProperty, $assoc, <IS_AUTHENTICATION_REQUIRED>);
+    }
+<!END_API_METHOD>
+    /**
      * Sends are request to the Zabbix API and returns the response as object.
      *
      * @param string $method Name of the API method
@@ -254,7 +320,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
      *
      * @return mixed API JSON response
      */
-    public function request($method, $params = null, $resultArrayKey = null, $assoc = true, $auth = true, $remainingAuthAttempts = 1)
+    private function request($method, $params = null, $resultArrayKey = null, $assoc = true, $auth = true, $remainingAuthAttempts = 1)
     {
         // Sanity check and conversion for params array.
         if (!$params) {
@@ -323,72 +389,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
         return $response;
     }
 
-    /**
-     * Returns the last JSON API response.
-     *
-     * @return ResponseInterface
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Logout from the API.
-     *
-     * This will also reset the auth Token.
-     *
-     * The $params Array can be used, to pass parameters to the Zabbix API.
-     * For more information about these parameters, check the Zabbix API
-     * documentation at https://www.zabbix.com/documentation/.
-     *
-     * The $arrayKeyProperty can be used to get an associative instead of an
-     * indexed array as response. A valid value for the $arrayKeyProperty is
-     * is any property of the returned JSON objects (e.g. "name", "host",
-     * "hostid", "graphid", "screenitemid").
-     *
-     * @param array $params Parameters to pass through
-     * @param string|null $arrayKeyProperty Object property for key of array
-     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
-     *
-     * @throws Exception
-     *
-     * @return mixed
-     */
-    public function userLogout($params = [], $arrayKeyProperty = null, $assoc = true)
-    {
-        $params = $this->getRequestParamsArray($params);
-        $response = $this->request('user.logout', $params, $arrayKeyProperty, $assoc);
-        $this->authToken = null;
-
-        return $response;
-    }
-<!START_API_METHOD>
-    /**
-     * Requests the Zabbix API and returns the response of the method "<API_METHOD>".
-     *
-     * The $params Array can be used, to pass parameters to the Zabbix API.
-     * For more information about these parameters, check the Zabbix API
-     * documentation at https://www.zabbix.com/documentation/.
-     *
-     * The $arrayKeyProperty can be used to get an associative instead of an
-     * indexed array as response. A valid value for the $arrayKeyProperty is
-     * is any property of the returned JSON objects (e.g. "name", "host",
-     * "hostid", "graphid", "screenitemid").
-     *
-     * @param mixed $params Zabbix API parameters
-     * @param string|null $arrayKeyProperty Object property for key of array
-     * @param bool $assoc Return the value as an associative array instead of an instance of stdClass
-     *
-     * @throws Exception
-     *
-     * @return mixed
-     */
-    public function <PHP_METHOD>($params = [], $arrayKeyProperty = null, $assoc = true)
-    {
-        return $this->request('<API_METHOD>', $this->getRequestParamsArray($params), $arrayKeyProperty, $assoc, <IS_AUTHENTICATION_REQUIRED>);
-    }
-<!END_API_METHOD>
     /**
      * Returns the array or the instance of `\stdClass` indexed by the given parameter or property
      * name.

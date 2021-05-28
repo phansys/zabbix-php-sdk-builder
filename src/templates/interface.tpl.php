@@ -100,19 +100,6 @@ interface <CLASSNAME_INTERFACE>
     public function printCommunication($print = true);
 
     /**
-     * Sends are request to the Zabbix API and returns the response as object.
-     *
-     * @param string $method Name of the API method
-     * @param array|mixed|null $params Additional parameters
-     * @param string|null $resultArrayKey
-     * @param bool $auth Enable authentication (default true)
-     * @param bool $assoc Return the result as an associative array
-     *
-     * @return mixed API JSON response
-     */
-    public function request($method, $params = null, $resultArrayKey = null, $auth = true, $assoc = false);
-
-    /**
      * Returns the last JSON API response.
      *
      * @return ResponseInterface
