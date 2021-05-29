@@ -265,7 +265,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
     /**
      * Returns the last JSON API response.
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function getResponse()
     {
