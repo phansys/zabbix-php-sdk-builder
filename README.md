@@ -23,7 +23,7 @@ In order to create the classes, you must execute the following script, indicatin
 
 For example, let's suposse you have downloaded the [Zabbix 3.4.15 source files](https://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix/zabbix_3.4.15.orig.tar.gz) in the `/opt/zabbix/` directory:
 
-    https://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix/zabbix_3.4.15.orig.tar.gz | tar xvz -C /opt/zabbix
+    wget -qO- https://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix/zabbix_3.4.15.orig.tar.gz | tar xvz -C /opt/zabbix
 
 Then, you should indicate `/opt/zabbix/zabbix-3.4.15/frontends/php/` as path:
 
