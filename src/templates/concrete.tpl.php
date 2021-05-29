@@ -386,7 +386,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             throw new Exception($e->getMessage(), $e->getCode(), $e);
         } finally {
             // Debug logging.
-            if ($this->printCommunication) {
+            if ($this->printCommunication && null !== $this->response) {
                 echo $this->response->getBody()."\n";
             }
         }
