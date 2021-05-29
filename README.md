@@ -5,9 +5,9 @@ It uses scaffolding around the **Zabbix API** source classes in order to create 
 The current version of this package is compatible and tested with Zabbix from version [3.0.0](https://repo.zabbix.com/zabbix/3.0/ubuntu/pool/main/z/zabbix/zabbix_3.0.0.orig.tar.gz) up to [3.4.15](https://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix/zabbix_3.4.15.orig.tar.gz).
 The support for higher versions will be handled following the **Semantic Versioning Specification** ([SemVer](https://semver.org/)).
 
-> :bulb:
->
-> Previously, the capabilities and responsibilities covered by this package were provided directly from `confirm-it-solutions/php-zabbix-api`. They were moved here because this way we can keep separated the dependencies required to build the classes from the ones required to use the resulting library.
+:bulb: Note
+
+Previously, the capabilities and responsibilities covered by this package were provided directly from `confirm-it-solutions/php-zabbix-api`. They were moved here because this way we can keep separated the dependencies required to build the classes from the ones required to use the resulting library.
 
 ## Install
 
