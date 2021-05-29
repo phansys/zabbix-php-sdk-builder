@@ -128,7 +128,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             $this->setApiUrl($apiUrl);
         }
 
-        $clientOptions['base_uri'] = $apiUrl;
+        $clientOptions['base_uri'] = $this->apiUrl;
 
         if (null !== $httpUser && null !== $httpPassword) {
             $this->setBasicAuthorization($httpUser, $httpPassword);
