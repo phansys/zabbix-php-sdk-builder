@@ -1,6 +1,6 @@
 {
     "name": "confirm-it-solutions/zabbix-php-sdk-builder",
-    "type": "library",
+    "type": "project",
     "description": "Builder for the PHP Zabbix SDK",
     "keywords": [
         "zabbix",
