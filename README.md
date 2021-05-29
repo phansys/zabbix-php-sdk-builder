@@ -19,7 +19,7 @@ This command will check all the required dependencies before installing anything
 
 In order to create the classes, you must execute the following script, indicating the path to your Zabbix sources in the argument 1:
 
-    php bin/build </path/to/zabbix/frontends/php>
+    ./bin/build </path/to/zabbix/frontends/php>
 
 For example, let's suposse you have downloaded the [Zabbix 3.4.15 source files](https://repo.zabbix.com/zabbix/3.4/ubuntu/pool/main/z/zabbix/zabbix_3.4.15.orig.tar.gz) in the `/opt/zabbix/` directory:
 
@@ -27,7 +27,7 @@ For example, let's suposse you have downloaded the [Zabbix 3.4.15 source files](
 
 Then, you should indicate `/opt/zabbix/zabbix-3.4.15/frontends/php/` as path:
 
-    php bin/build /opt/zabbix/zabbix-3.4.15/frontends/php/
+    ./bin/build /opt/zabbix/zabbix-3.4.15/frontends/php/
 
 The resulting files will be placed at `build/` directory in the root of this repository. They are:
 
