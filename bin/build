@@ -78,7 +78,11 @@ foreach ($builder->getApiClassMap() as $resource => $class) {
             $apiArray[$resource][] = $method->name;
         }
     }
+
+    sort($apiArray[$resource]);
 }
+
+ksort($apiArray);
 
 // Build concrete template.
 if (!$template = file_get_contents(Builder::PATH_TEMPLATES.'/concrete.tpl.php')) {
