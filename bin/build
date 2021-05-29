@@ -162,6 +162,8 @@ $apiConstants = '';
 
 $blacklistedConstants = ['HTTPS', 'ZBX_FONTPATH'];
 
+asort($constantsArray['constant_names']);
+
 // Build API constants.
 foreach ($constantsArray['constant_names'] as $k => $name) {
     if (0 === strpos($name, 'ZBX_STYLE_') || in_array($name, $blacklistedConstants, true)) {
