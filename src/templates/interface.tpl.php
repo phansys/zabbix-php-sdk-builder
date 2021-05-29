@@ -31,6 +31,8 @@ use Psr\Http\Message\ResponseInterface;
 
 interface <CLASSNAME_INTERFACE>
 {
+    const PHP_ZABBIX_API_VERSION = '3';
+
     const UNAUTHORIZED_ERROR_CODE = -32602;
 
     const UNAUTHORIZED_ERROR_MESSAGE = 'Not authorised.';

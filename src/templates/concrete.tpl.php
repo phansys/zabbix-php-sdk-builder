@@ -130,6 +130,26 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
 
         $clientOptions['base_uri'] = $this->apiUrl;
 
+        if (!isset($clientOptions[RequestOptions::HEADERS])) {
+            // Add the default "User-Agent" header.
+            $clientOptions[RequestOptions::HEADERS] = ['User-Agent' => self::getDefaultAgentName()];
+        } else {
+            $isUserAgentSet = false;
+
+            foreach (array_keys($clientOptions[RequestOptions::HEADERS]) as $name) {
+                if (strtolower($name) === 'user-agent') {
+                    $isUserAgentSet = true;
+
+                    break;
+                }
+            }
+
+            if (!$isUserAgentSet) {
+                // Add the "User-Agent" header if one was not already set.
+                $clientOptions[RequestOptions::HEADERS]['User-Agent'] = self::getDefaultAgentName();
+            }
+        }
+
         if (null !== $httpUser && null !== $httpPassword) {
             $this->setBasicAuthorization($httpUser, $httpPassword);
         }
@@ -390,48 +410,6 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
     }
 
     /**
-     * Returns the array or the instance of `\stdClass` indexed by the given parameter or property
-     * name.
-     *
-     * @param array|\stdClass|mixed $objectOrArray Indexed array with objects
-     * @param string $useObjectProperty Object property to use as array key
-     *
-     * @return array<string, mixed>|\stdClass
-     */
-    private function convertToAssociatveArray($objectOrArray, $useObjectProperty)
-    {
-        if (is_array($objectOrArray)) {
-            // Sanity check.
-            if (!empty($objectOrArray) && !isset(current($objectOrArray)[$useObjectProperty])) {
-                throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist in the given elements.', $useObjectProperty));
-            }
-
-            // Return associative array.
-            return array_column($objectOrArray, null, $useObjectProperty);
-        }
-
-        if (is_object($objectOrArray)) {
-            $objectVars = get_object_vars($objectOrArray);
-
-            // Sanity check.
-            if (!empty($objectVars) && !property_exists(current($objectVars), $useObjectProperty)) {
-                throw new \InvalidArgumentException(sprintf('Property "%s" does not exist in the given elements.', $useObjectProperty));
-            }
-
-            // Loop through array and replace keys.
-            $newObject = new \stdClass();
-            foreach ($objectVars as $key => $object) {
-                $newObject->{$object->{$useObjectProperty}} = $object;
-            }
-
-            // Return object indexed by the given property value.
-            return $newObject;
-        }
-
-        throw new \InvalidArgumentException(sprintf('Argument 1 passed to "%s()" must be of type "array" or an instance of "\stdClass", "%s" given.', __METHOD__, gettype($objectOrArray)));
-    }
-
-    /**
      * Returns a params array for the request.
      *
      * This method will automatically convert all provided types into a correct
@@ -497,7 +475,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
                 throw new Exception($this->responseDecoded['error']['data'], $this->responseDecoded['error']['code']);
             }
             if (null !== $resultArrayKey) {
-                return $this->convertToAssociatveArray($this->responseDecoded['result'], $resultArrayKey);
+                return self::convertToAssociatveArray($this->responseDecoded['result'], $resultArrayKey);
             }
 
             return $this->responseDecoded['result'];
@@ -508,7 +486,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
         }
 
         if (null !== $resultArrayKey) {
-            return $this->convertToAssociatveArray($this->responseDecoded->result, $resultArrayKey);
+            return self::convertToAssociatveArray($this->responseDecoded->result, $resultArrayKey);
         }
 
         return $this->responseDecoded->result;
@@ -559,5 +537,55 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
         }
 
         return $this->authToken;
+    }
+
+    /**
+     * Returns the array or the instance of `\stdClass` indexed by the given parameter or property
+     * name.
+     *
+     * @param array|\stdClass|mixed $objectOrArray Indexed array with objects
+     * @param string $useObjectProperty Object property to use as array key
+     *
+     * @return array<string, mixed>|\stdClass
+     */
+    private static function convertToAssociatveArray($objectOrArray, $useObjectProperty)
+    {
+        if (is_array($objectOrArray)) {
+            // Sanity check.
+            if (!empty($objectOrArray) && !isset(current($objectOrArray)[$useObjectProperty])) {
+                throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist in the given elements.', $useObjectProperty));
+            }
+
+            // Return associative array.
+            return array_column($objectOrArray, null, $useObjectProperty);
+        }
+
+        if (is_object($objectOrArray)) {
+            $objectVars = get_object_vars($objectOrArray);
+
+            // Sanity check.
+            if (!empty($objectVars) && !property_exists(current($objectVars), $useObjectProperty)) {
+                throw new \InvalidArgumentException(sprintf('Property "%s" does not exist in the given elements.', $useObjectProperty));
+            }
+
+            // Loop through array and replace keys.
+            $newObject = new \stdClass();
+            foreach ($objectVars as $key => $object) {
+                $newObject->{$object->{$useObjectProperty}} = $object;
+            }
+
+            // Return object indexed by the given property value.
+            return $newObject;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Argument 1 passed to "%s()" must be of type "array" or an instance of "\stdClass", "%s" given.', __METHOD__, gettype($objectOrArray)));
+    }
+
+    /**
+     * @return string
+     */
+    private static function getDefaultAgentName()
+    {
+        return sprintf('PhpZabbixApi/%s %s', self::PHP_ZABBIX_API_VERSION, \GuzzleHttp\default_user_agent());
     }
 }

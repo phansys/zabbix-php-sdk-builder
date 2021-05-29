@@ -27,6 +27,7 @@
 
 namespace Confirm\ZabbixSdkBuilder\Tests;
 
+use Confirm\ZabbixApi\TokenCacheAwareInterface;
 use Confirm\ZabbixApi\ZabbixApi;
 use Confirm\ZabbixApi\ZabbixApiInterface;
 use PHPUnit\Framework\TestCase;
@@ -40,6 +41,7 @@ final class BuildTest extends TestCase
     {
         $this->assertTrue(class_exists(ZabbixApi::class));
         $this->assertTrue(is_subclass_of(ZabbixApi::class, ZabbixApiInterface::class));
+        $this->assertTrue(is_subclass_of(ZabbixApi::class, TokenCacheAwareInterface::class));
     }
 
     public function testZabbixApiSymbolsCount(): void
@@ -55,7 +57,7 @@ final class BuildTest extends TestCase
      */
     public function testZabbixApiMethods(string $methodName): void
     {
-        $this->assertTrue(method_exists(ZabbixApi::class, $methodName));
+        $this->assertTrue(method_exists(ZabbixApiInterface::class, $methodName));
     }
 
     public function provideMethodNames(): iterable
