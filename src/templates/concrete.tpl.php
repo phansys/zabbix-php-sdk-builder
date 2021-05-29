@@ -137,7 +137,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             $isUserAgentSet = false;
 
             foreach (array_keys($clientOptions[RequestOptions::HEADERS]) as $name) {
-                if (strtolower($name) === 'user-agent') {
+                if ('user-agent' === strtolower($name)) {
                     $isUserAgentSet = true;
 
                     break;
