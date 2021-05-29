@@ -25,7 +25,7 @@ THE SOFTWARE.
 @author confirm IT solutions GmbH, Rathausstrase 14, CH-6340 Baar
 EOF;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([
@@ -53,20 +53,22 @@ return PhpCsFixer\Config::create()
         'native_function_invocation' => false,
         'no_alternative_syntax' => true,
         'no_empty_comment' => true,
-        'no_extra_consecutive_blank_lines' => [
-            'break',
-            'continue',
-            'extra',
-            'return',
-            'throw',
-            'use',
-            'parenthesis_brace_block',
-            'square_brace_block',
-            'curly_brace_block',
+        'no_extra_blank_lines' => [
+            'tokens' => [
+                'break',
+                'continue',
+                'extra',
+                'return',
+                'throw',
+                'use',
+                'parenthesis_brace_block',
+                'square_brace_block',
+                'curly_brace_block',
+            ],
         ],
         'no_homoglyph_names' => true,
         'no_null_property_initialization' => true,
-        'no_short_echo_tag' => true,
+        'echo_tag_syntax' => ['format' => 'short'],
         'no_spaces_inside_parenthesis' => true,
         'no_superfluous_elseif' => true,
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true],
@@ -94,7 +96,7 @@ return PhpCsFixer\Config::create()
         'php_unit_set_up_tear_down_visibility' => true,
         'php_unit_strict' => true,
         'pow_to_exponentiation' => true,
-        'psr4' => true,
+        'psr_autoloading' => true,
         'return_assignment' => true,
         'single_line_comment_style' => true,
         'single_quote' => false,
