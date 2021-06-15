@@ -502,13 +502,15 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             return $this->authToken;
         }
 
+        $tokenCacheKey = null;
+
         if ($this->tokenCache) {
             // Build key for cached auth token.
             $uid = function_exists('posix_getuid') ? posix_getuid() : -1;
             $tokenCacheKey = 'zabbixapi-token-'.md5($this->user.'|'.$uid);
         }
 
-        if ($fromCache && $this->tokenCache) {
+        if ($fromCache && null !== $tokenCacheKey) {
             $cacheItem = $this->tokenCache->getItem($tokenCacheKey);
 
             if ($cacheItem->isHit()) {
@@ -522,7 +524,7 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             $params = $this->getRequestParamsArray(['user' => $this->user, 'password' => $this->password]);
             $this->authToken = $this->userLogin($params);
 
-            if ($this->tokenCache) {
+            if (null !== $tokenCacheKey) {
                 // Cache auth token.
                 $cacheItem = $this->tokenCache->getItem($tokenCacheKey);
                 $cacheItem->set($this->authToken);
