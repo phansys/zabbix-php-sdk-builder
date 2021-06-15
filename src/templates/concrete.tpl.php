@@ -485,6 +485,8 @@ final class <CLASSNAME_CONCRETE> implements <CLASSNAME_INTERFACE>, TokenCacheAwa
             return $this->responseDecoded['result'];
         }
 
+        assert($this->responseDecoded instanceof \stdClass);
+
         if (property_exists($this->responseDecoded, 'error') && $error = $this->responseDecoded->error) {
             throw new Exception($error->data, $error->code);
         }
