@@ -2,6 +2,6 @@
 *.md export-ignore
 build export-ignore
 tests export-ignore
-phpstan-baseline.neon
+phpstan-baseline.neon export-ignore
 phpstan.neon.dist export-ignore
 phpunit.xml.dist export-ignore
